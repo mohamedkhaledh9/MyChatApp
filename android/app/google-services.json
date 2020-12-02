@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "94036161715",
+    "firebase_url": "https://myowenchatapp-34969.firebaseio.com",
+    "project_id": "myowenchatapp-34969",
+    "storage_bucket": "myowenchatapp-34969.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94036161715:android:fb03a908c39aade6e0ecc6",
+        "android_client_info": {
+          "package_name": "mohamed.my_owen_chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "94036161715-4a1qe167992j62m86npo389vgki9cim7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALSahFAkIxv5vp8UhsB597suErly-byGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "94036161715-4a1qe167992j62m86npo389vgki9cim7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
