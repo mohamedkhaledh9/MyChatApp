@@ -61,7 +61,6 @@ class _ChatRoomState extends State<ChatRoom> {
         builder: (context, snapShot) {
           if (snapShot.hasData) {
             return ListView.builder(
-                shrinkWrap: true,
                 itemCount: snapShot.data.docs.length,
                 itemBuilder: (context, index) {
                   return ChatRoomTile(

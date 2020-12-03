@@ -48,6 +48,7 @@ class _ConersationScreenState extends State<ConversationScreen> {
         builder: (context, snapShot) {
           if (snapShot.hasData) {
             return ListView.builder(
+                reverse: true,
                 shrinkWrap: true,
                 itemCount: snapShot.data.docs.length,
                 itemBuilder: (context, index) {
@@ -150,7 +151,11 @@ class _ConersationScreenState extends State<ConversationScreen> {
                               icon: Icon(Icons.send),
                               color: Colors.blue,
                               onPressed: () {
-                                sendMessage();
+                                if (messageController.text != "") {
+                                  sendMessage();
+                                } else {
+                                  return null;
+                                }
                               }),
                         )
                       ],
