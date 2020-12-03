@@ -51,7 +51,7 @@ class _SearchScreenState extends State<SearchPage> {
     });
   }
 
-  Widget SearchTile({String userName, String userEmail}) {
+  Widget searchTile({String userName, String userEmail}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -118,7 +118,7 @@ class _SearchScreenState extends State<SearchPage> {
           shrinkWrap: true,
           itemCount: searchSnapShot.docs.length,
           itemBuilder: (context, index) {
-            return SearchTile(
+            return searchTile(
               userName: searchSnapShot.docs[index].data()['name'],
               userEmail: searchSnapShot.docs[index].data()['email'],
             );

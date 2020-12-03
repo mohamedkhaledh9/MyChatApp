@@ -42,7 +42,7 @@ class _ConersationScreenState extends State<ConversationScreen> {
     }
   }
 
-  Widget MessagesList() {
+  Widget messagesList() {
     return StreamBuilder(
         stream: messagesStream,
         builder: (context, snapShot) {
@@ -52,7 +52,7 @@ class _ConersationScreenState extends State<ConversationScreen> {
                 shrinkWrap: true,
                 itemCount: snapShot.data.docs.length,
                 itemBuilder: (context, index) {
-                  return MessageTile(
+                  return messageTile(
                     snapShot.data.docs[index]["message"],
                     snapShot.data.docs[index]["sendBy"] == Constants.myName,
                   );
@@ -67,7 +67,7 @@ class _ConersationScreenState extends State<ConversationScreen> {
         });
   }
 
-  Widget MessageTile(String message, bool isSendByMe) {
+  Widget messageTile(String message, bool isSendByMe) {
     return Container(
       padding: EdgeInsets.only(
           left: isSendByMe ? 0 : 20, right: isSendByMe ? 20 : 0),
@@ -115,7 +115,7 @@ class _ConersationScreenState extends State<ConversationScreen> {
         body: Container(
           child: Column(
             children: [
-              Expanded(child: MessagesList()),
+              Expanded(child: messagesList()),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
