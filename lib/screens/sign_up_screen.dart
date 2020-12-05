@@ -111,8 +111,10 @@ class _SignUpState extends State<SignUp> {
                     },
                     child: Text(
                       " Confirm ",
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
                     ),
                   ),
                 ),

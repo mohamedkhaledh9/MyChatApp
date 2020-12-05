@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_owen_chat_app/constans.dart';
 import 'package:my_owen_chat_app/functions/shared_prefrences.dart';
+import 'package:my_owen_chat_app/providers/change_them_data.dart';
 import 'package:my_owen_chat_app/screens/chat_rooms_screen.dart';
 import 'package:my_owen_chat_app/screens/sign_up_screen.dart';
 import 'package:my_owen_chat_app/services/auth.dart';
 import 'package:my_owen_chat_app/services/database.dart';
 import 'package:my_owen_chat_app/widgets/custom_text_field.dart';
 import 'package:my_owen_chat_app/widgets/logo.dart';
+import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
   static String id = "SignIn";
@@ -25,6 +27,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    ChangeThemData changeThemData = Provider.of(context);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -105,7 +108,10 @@ class _SignInState extends State<SignIn> {
                   },
                   child: Text(
                     "Login",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
                   ),
                 ),
               ),

@@ -29,6 +29,7 @@ class CustomFormField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: TextFormField(
+        style: TextStyle(color: Colors.black),
         onSaved: onClic,
         obscureText: hint == "Enter Your Password" ? true : false,
         validator: (value) {
@@ -38,6 +39,7 @@ class CustomFormField extends StatelessWidget {
         },
         cursorColor: kMainColor,
         decoration: InputDecoration(
+          hintStyle: TextStyle(color: Colors.grey),
           prefixIcon: Icon(
             icon,
             color: kMainColor,
