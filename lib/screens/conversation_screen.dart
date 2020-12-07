@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_owen_chat_app/constans.dart';
 import 'package:my_owen_chat_app/constants/constants.dart';
@@ -34,7 +34,11 @@ class _ConersationScreenState extends State<ConversationScreen> {
       Map<String, dynamic> messagesDetailsMap = {
         "message": messageController.text,
         "sendBy": Constants.myName,
-        "time": DateTime.now().millisecondsSinceEpoch,
+        "time": DateTime.now().microsecondsSinceEpoch,
+        "displyTime": DateTime.now()
+            .toIso8601String()
+            .replaceAll("T", "  at ")
+            .substring(0, 23),
       };
       _dataBaseMethods.addConversationMessages(
           widget.chatRoomId, messagesDetailsMap);
@@ -55,6 +59,7 @@ class _ConersationScreenState extends State<ConversationScreen> {
                   return messageTile(
                     snapShot.data.docs[index]["message"],
                     snapShot.data.docs[index]["sendBy"] == Constants.myName,
+                    snapShot.data.docs[index]["displyTime"],
                   );
                 });
           } else {
@@ -67,7 +72,7 @@ class _ConersationScreenState extends State<ConversationScreen> {
         });
   }
 
-  Widget messageTile(String message, bool isSendByMe) {
+  Widget messageTile(String message, bool isSendByMe, String messageTime) {
     return Container(
       padding: EdgeInsets.only(
           left: isSendByMe ? 0 : 20, right: isSendByMe ? 20 : 0),
@@ -77,10 +82,11 @@ class _ConersationScreenState extends State<ConversationScreen> {
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         margin: EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: isSendByMe
-                    ? [Color(0xff7EF4), Color(0xff2A75BC)]
-                    : [Color(0xFFBFEB91), Color(0xff7EF4)]),
+            color: isSendByMe ? Colors.cyan : Colors.indigoAccent,
+            // gradient: LinearGradient(
+            //     colors: isSendByMe
+            //         ? [Color(0xff7EF4), Color(0xff2A75BC)]
+            //         : [Color(0xFFBFEB91), Color(0xff7EF4)]),
             borderRadius: isSendByMe
                 ? BorderRadius.only(
                     topRight: Radius.circular(20),
@@ -90,7 +96,21 @@ class _ConersationScreenState extends State<ConversationScreen> {
                     topRight: Radius.circular(20),
                     topLeft: Radius.circular(20),
                     bottomRight: Radius.circular(20))),
-        child: Text(message),
+        child: Column(
+          children: [
+            Text(
+              message,
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Text(
+              messageTime,
+              style: TextStyle(color: Colors.blueGrey),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -111,7 +131,6 @@ class _ConersationScreenState extends State<ConversationScreen> {
               "${widget.chatRoomId.toString().replaceAll("_", "").replaceAll(Constants.myName, "").toUpperCase()}"),
           centerTitle: true,
         ),
-        backgroundColor: Colors.white70,
         body: Container(
           child: Column(
             children: [

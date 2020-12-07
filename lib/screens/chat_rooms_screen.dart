@@ -24,14 +24,14 @@ class _ChatRoomState extends State<ChatRoom> {
   Stream<QuerySnapshot> userStream;
   String userName;
   String email;
+  String userImageUrl;
   String initialDropDown = "Light Mode";
   final _auth = FirebaseAuth.instance;
-
-  getCurrentUser() async {
-    email = await _auth.currentUser.email;
-  }
+  QuerySnapshot userImage;
 
   getUserInfo() async {
+    userImageUrl =
+        await SharedPrefrencesFunctions.getUserImageUrlFromSharedPrefrences();
     Constants.myName =
         await SharedPrefrencesFunctions.getUserNameFromSharedPrefrences();
     Stream<QuerySnapshot> userData =
@@ -67,6 +67,25 @@ class _ChatRoomState extends State<ChatRoom> {
     );
   }
 
+  Widget profileImage() {
+    if (userImage != null) {
+      return ListView.builder(
+          itemCount: userImage.docs.length,
+          itemBuilder: (context, index) {
+            CircleAvatar(
+              radius: 40,
+              backgroundImage:
+                  NetworkImage(userImage.docs[index].data()['image_url']),
+            );
+          });
+    } else {
+      return CircleAvatar(
+        radius: 40,
+        backgroundColor: Colors.grey,
+      );
+    }
+  }
+
   Widget usersList() {
     return StreamBuilder(
         stream: userStream,
@@ -76,11 +95,12 @@ class _ChatRoomState extends State<ChatRoom> {
                 itemCount: snapShot.data.docs.length,
                 itemBuilder: (context, index) {
                   return ChatRoomTile(
-                      userName: snapShot.data.docs[index]['chatroom_id']
-                          .toString()
-                          .replaceAll("_", "")
-                          .replaceAll(Constants.myName, ""),
-                      chatRoomId: snapShot.data.docs[index]["chatroom_id"]);
+                    userName: snapShot.data.docs[index]['chatroom_id']
+                        .toString()
+                        .replaceAll("_", "")
+                        .replaceAll(Constants.myName, ""),
+                    chatRoomId: snapShot.data.docs[index]["chatroom_id"],
+                  );
                 });
           } else {
             return Center(
@@ -96,7 +116,6 @@ class _ChatRoomState extends State<ChatRoom> {
   void initState() {
     getUserInfo();
     super.initState();
-    getCurrentUser();
   }
 
   @override
@@ -113,14 +132,11 @@ class _ChatRoomState extends State<ChatRoom> {
                     children: [
                       ListTile(
                         leading: CircleAvatar(
-                          child: Text(
-                            userName != null
-                                ? userName.substring(0, 1).toUpperCase()
-                                : "",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          radius: 30,
+                          radius: 45,
+                          backgroundColor: Colors.grey,
+                          backgroundImage: userImageUrl != null
+                              ? NetworkImage(userImageUrl)
+                              : null,
                         ),
                         title: Text(
                           Constants.myName != null
@@ -130,7 +146,10 @@ class _ChatRoomState extends State<ChatRoom> {
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Text(email == null ? "" : email),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(60, 0, 10, 0),
+                        child: Text(email == null ? "" : email),
+                      ),
                     ],
                   ),
                 ),
@@ -195,7 +214,7 @@ class _ChatRoomState extends State<ChatRoom> {
                                 ),
                               ),
                             ],
-                          )
+                          ),
                         ],
                       );
                       return showDialog(
@@ -253,8 +272,9 @@ class _ChatRoomState extends State<ChatRoom> {
 class ChatRoomTile extends StatelessWidget {
   final String userName;
   final String chatRoomId;
+  final String imageUrl;
 
-  ChatRoomTile({this.userName, this.chatRoomId});
+  ChatRoomTile({this.userName, this.chatRoomId, this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -277,21 +297,34 @@ class ChatRoomTile extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: Row(
             children: [
-              Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30)),
-                child: Center(
-                  child: Text(userName.substring(0, 1).toUpperCase(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold)),
+              CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.grey,
+                // backgroundImage:
+                //     imageUrl != null ? NetworkImage(imageUrl) : null,
+                child: Text(
+                  userName.substring(0, 1).toUpperCase(),
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: kMainColor),
                 ),
               ),
+              // Container(
+              //   height: 50,
+              //   width: 50,
+              //   decoration: BoxDecoration(
+              //       color: Colors.white,
+              //       borderRadius: BorderRadius.circular(30)),
+              //   child: Center(
+              //     child: Text(userName.substring(0, 1).toUpperCase(),
+              //         textAlign: TextAlign.center,
+              //         style: TextStyle(
+              //             color: Colors.blueGrey,
+              //             fontSize: 16,
+              //             fontWeight: FontWeight.bold)),
+              //   ),
+              // ),
               SizedBox(
                 width: 12,
               ),

@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_owen_chat_app/constans.dart';
 import 'package:my_owen_chat_app/constants/constants.dart';
-import 'package:my_owen_chat_app/screens/chat_rooms_screen.dart';
+import 'package:my_owen_chat_app/functions/shared_prefrences.dart';
 import 'package:my_owen_chat_app/screens/conversation_screen.dart';
 import 'package:my_owen_chat_app/services/database.dart';
 
 class SearchPage extends StatefulWidget {
+  // final String ImageUrl;
+  // SearchPage(this.ImageUrl);
   static String id = "SearchPage";
 
   @override
@@ -15,8 +17,10 @@ class SearchPage extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchPage> {
   QuerySnapshot searchSnapShot;
+  QuerySnapshot userImage;
   TextEditingController searchController = TextEditingController();
   DataBaseMethods _dataBaseMethods = DataBaseMethods();
+  String imageUrl;
 
   getChatRoomId(String a, String b) {
     if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
@@ -43,6 +47,15 @@ class _SearchScreenState extends State<SearchPage> {
     }
   }
 
+  getUserImage() async {
+    await SharedPrefrencesFunctions.getUserEmailFromSharedPrefrences();
+    userImage = await _dataBaseMethods.getUsersByUserEmail(Constants.email);
+    setState(() {
+      imageUrl = (userImage.docs[0].data()["image_url"]);
+      print(imageUrl);
+    });
+  }
+
   search() {
     _dataBaseMethods.getUsersByUserName(searchController.text).then((value) {
       setState(() {
@@ -51,7 +64,7 @@ class _SearchScreenState extends State<SearchPage> {
     });
   }
 
-  Widget searchTile({String userName, String userEmail}) {
+  Widget searchTile({String userName, String userEmail, String userImageUrl}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -62,19 +75,9 @@ class _SearchScreenState extends State<SearchPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Container(
-              height: 35,
-              width: 35,
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
-              child: Center(
-                child: Text(userName.substring(0, 1).toUpperCase(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-              ),
+            CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(userImageUrl),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -121,6 +124,7 @@ class _SearchScreenState extends State<SearchPage> {
             return searchTile(
               userName: searchSnapShot.docs[index].data()['name'],
               userEmail: searchSnapShot.docs[index].data()['email'],
+              userImageUrl: searchSnapShot.docs[index].data()['image_url'],
             );
           });
     } else {
@@ -135,6 +139,8 @@ class _SearchScreenState extends State<SearchPage> {
   void initState() {
     super.initState();
     search();
+    // getimageUrl();
+    getUserImage();
   }
 
   @override
@@ -185,7 +191,9 @@ class _SearchScreenState extends State<SearchPage> {
             SizedBox(
               height: 50,
             ),
-            Center(child: Text("Search Result ...")),
+            Center(
+              child: Text("Search Result ..."),
+            ),
             searhResultList(),
           ],
         ),

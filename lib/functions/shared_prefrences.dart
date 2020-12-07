@@ -5,6 +5,7 @@ class SharedPrefrencesFunctions {
   static String sharedPrefrencesUserNameKey = "UserNameKey";
   static String sharedPrefrencesUserEmailKey = "UserEmailKey";
   static String SharedPrefrenceskMode = "UserMode";
+  static String sharedPrefrencesImageUrl = "ImageUrl";
 
   ///////////////set Values in Shared Pref
   static Future<bool> saveUserLoggedInSharedPrefrences(bool IsLoggedIn) async {
@@ -27,6 +28,11 @@ class SharedPrefrencesFunctions {
     return await pref.setString(SharedPrefrenceskMode, Mode);
   }
 
+  static Future<bool> saveImageUrlSharedPrefrences(String ImageUrl) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return await pref.setString(sharedPrefrencesImageUrl, ImageUrl);
+  }
+
   /////////// get values from shared
   static Future<bool> getUserLoggedInSharedPrefrences() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -46,5 +52,10 @@ class SharedPrefrencesFunctions {
   static Future<String> getUserModeFromSharedPrefrences() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return await pref.getString(SharedPrefrenceskMode);
+  }
+
+  static Future<String> getUserImageUrlFromSharedPrefrences() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return await pref.getString(sharedPrefrencesImageUrl);
   }
 }

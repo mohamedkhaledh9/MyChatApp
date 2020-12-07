@@ -10,6 +10,17 @@ class DataBaseMethods {
         .get();
   }
 
+  getUsersimages(String userName) async {
+    return await firestore
+        .collection("users")
+        .where("name", isEqualTo: userName)
+        .get();
+  }
+
+  getImageUrl() async {
+    return await firestore.collection("users").get();
+  }
+
   getUsersByUserEmail(String userEmail) async {
     return await firestore
         .collection("users")
@@ -21,7 +32,7 @@ class DataBaseMethods {
     firestore.collection("users").add(userMap);
   }
 
-  creatChatRom(String chatRoomId, chatRoomMap) {
+  creatChatRom(String chatRoomId, Map<String, dynamic> chatRoomMap) {
     firestore.collection("ChatRoom").doc(chatRoomId).set(chatRoomMap);
   }
 
