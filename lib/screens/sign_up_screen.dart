@@ -66,8 +66,8 @@ class _SignUpState extends State<SignUp> {
                   height: 10,
                 ),
                 CustomFormField(
-                    onClic: (value) {
-                      userName = value;
+                    onClic: (String value) {
+                      userName = value.trim();
                     },
                     icon: Icons.person,
                     hint: "Enter User Name"),

@@ -57,7 +57,9 @@ class _SearchScreenState extends State<SearchPage> {
   }
 
   search() {
-    _dataBaseMethods.getUsersByUserName(searchController.text).then((value) {
+    _dataBaseMethods
+        .getUsersByUserName(searchController.text.trim())
+        .then((value) {
       setState(() {
         searchSnapShot = value;
       });

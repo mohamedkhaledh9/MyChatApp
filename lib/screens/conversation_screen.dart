@@ -82,7 +82,7 @@ class _ConersationScreenState extends State<ConversationScreen> {
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         margin: EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-            color: isSendByMe ? Colors.cyan : Colors.indigoAccent,
+            color: isSendByMe ? Colors.cyan : Colors.greenAccent,
             // gradient: LinearGradient(
             //     colors: isSendByMe
             //         ? [Color(0xff7EF4), Color(0xff2A75BC)]
