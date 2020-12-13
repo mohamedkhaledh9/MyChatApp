@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:my_owen_chat_app/constans.dart';
 import 'package:my_owen_chat_app/functions/shared_prefrences.dart';
@@ -27,6 +28,8 @@ class _SignInState extends State<SignIn> {
   DataBaseMethods _dataBaseMethods = DataBaseMethods();
   QuerySnapshot snapshotUserInfo;
   bool isLoading = false;
+  bool showPassword = false;
+
   @override
   Widget build(BuildContext context) {
     ChangeThemData changeThemData = Provider.of(context);
@@ -64,11 +67,28 @@ class _SignInState extends State<SignIn> {
                 height: 20,
               ),
               CustomFormField(
-                  onClic: (value) {
-                    password = value;
+                onClic: (value) {
+                  password = value;
+                },
+                icon: Icons.lock,
+                hint: "Enter Your Password",
+                showPass: showPassword,
+                icon2: IconButton(
+                  icon: Icon(Icons.remove_red_eye),
+                  color: kMainColor,
+                  onPressed: () {
+                    if (showPassword == false) {
+                      setState(() {
+                        showPassword = true;
+                      });
+                    } else {
+                      setState(() {
+                        showPassword = false;
+                      });
+                    }
                   },
-                  icon: Icons.lock,
-                  hint: "Enter Your Password"),
+                ),
+              ),
               SizedBox(
                 height: 20,
               ),
@@ -106,7 +126,7 @@ class _SignInState extends State<SignIn> {
                                       .docs[0]
                                       .data()["image_url"]);
 
-                              Navigator.pushNamed(context, ChatRoom.id);
+                              Get.offAll(ChatRoom());
                             }
                           });
                         } catch (e) {

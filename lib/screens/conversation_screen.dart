@@ -56,11 +56,18 @@ class _ConersationScreenState extends State<ConversationScreen> {
                 shrinkWrap: true,
                 itemCount: snapShot.data.docs.length,
                 itemBuilder: (context, index) {
-                  return messageTile(
-                    snapShot.data.docs[index]["message"],
-                    snapShot.data.docs[index]["sendBy"] == Constants.myName,
-                    snapShot.data.docs[index]["displyTime"],
-                  );
+                  if (snapShot.data.docs.length != null) {
+                    return messageTile(
+                      snapShot.data.docs[index]["message"],
+                      snapShot.data.docs[index]["sendBy"] == Constants.myName,
+                      snapShot.data.docs[index]["displyTime"],
+                    );
+                  } else {
+                    return Center(
+                      child: Text(
+                          "No Messages To Display ... Type Your First Message"),
+                    );
+                  }
                 });
           } else {
             return Center(
@@ -83,10 +90,6 @@ class _ConersationScreenState extends State<ConversationScreen> {
         margin: EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
             color: isSendByMe ? Colors.cyan : Colors.greenAccent,
-            // gradient: LinearGradient(
-            //     colors: isSendByMe
-            //         ? [Color(0xff7EF4), Color(0xff2A75BC)]
-            //         : [Color(0xFFBFEB91), Color(0xff7EF4)]),
             borderRadius: isSendByMe
                 ? BorderRadius.only(
                     topRight: Radius.circular(20),
@@ -150,6 +153,9 @@ class _ConersationScreenState extends State<ConversationScreen> {
                       children: [
                         Expanded(
                           child: TextField(
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                             cursorColor: Colors.blue,
                             autofocus: true,
                             decoration: InputDecoration(

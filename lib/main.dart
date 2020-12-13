@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:my_owen_chat_app/functions/shared_prefrences.dart';
 import 'package:my_owen_chat_app/providers/change_them_data.dart';
 import 'package:my_owen_chat_app/screens/chat_rooms_screen.dart';
@@ -40,7 +41,7 @@ class MaterialThemData extends StatefulWidget {
 
 class _MaterialThemDataState extends State<MaterialThemData> {
   bool isLoggedIn = false;
-  String modeValue = "Light Mode";
+  String modeValue = "LightMode";
 
   getModeValue() async {
     await SharedPrefrencesFunctions.getUserModeFromSharedPrefrences()
@@ -70,8 +71,8 @@ class _MaterialThemDataState extends State<MaterialThemData> {
   @override
   Widget build(BuildContext context) {
     ChangeThemData changeThemData = Provider.of(context);
-    return MaterialApp(
-        theme: changeThemData.getThem(),
+    return GetMaterialApp(
+        theme: modeValue == "LightMode" ? ThemeData.light() : ThemeData.dark(),
         debugShowCheckedModeBanner: false,
         home: isLoggedIn ? ChatRoom() : SignIn(),
         routes: {

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:my_owen_chat_app/constans.dart';
 import 'package:my_owen_chat_app/constants/constants.dart';
 import 'package:my_owen_chat_app/functions/shared_prefrences.dart';
@@ -160,67 +161,65 @@ class _ChatRoomState extends State<ChatRoom> {
               ),
               ListTile(
                 leading: GestureDetector(
-                    onTap: () {
-                      AlertDialog alert = AlertDialog(
-                        buttonPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 22),
-                        actionsPadding:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-                        contentPadding: EdgeInsets.all(30),
-                        title: Text("Select Them"),
-                        actions: [
-                          Column(
-                            children: [
-                              FlatButton(
-                                onPressed: () {
-                                  setState(() {
-                                    changeThemData.setThem(ThemeData.light());
-                                    SharedPrefrencesFunctions
-                                        .saveUserModeSharedPrefrences(
-                                            "Light Mode");
-                                    Navigator.pop(context);
-                                  });
-                                },
-                                child: Text(
-                                  "Light Mode",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: changeThemData.getThem() ==
-                                              ThemeData.dark()
-                                          ? Colors.white
-                                          : Colors.black),
-                                ),
+                  onTap: () {
+                    AlertDialog alert = AlertDialog(
+                      buttonPadding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 22),
+                      actionsPadding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                      contentPadding: EdgeInsets.all(30),
+                      title: Text("Select Them"),
+                      actions: [
+                        Column(
+                          children: [
+                            FlatButton(
+                              onPressed: () {
+                                setState(() {
+                                  Get.changeTheme(ThemeData.light());
+                                  SharedPrefrencesFunctions
+                                      .saveUserModeSharedPrefrences(
+                                          "LightMode");
+                                  Navigator.pop(context);
+                                });
+                              },
+                              child: Text(
+                                "Light Mode",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Get.isDarkMode
+                                        ? Colors.white
+                                        : Colors.black),
                               ),
-                              FlatButton(
-                                onPressed: () {
-                                  setState(() {
-                                    changeThemData.setThem(ThemeData.dark());
-                                    SharedPrefrencesFunctions
-                                        .saveUserModeSharedPrefrences(
-                                            "Dark Mode");
-                                    Navigator.pop(context);
-                                  });
-                                },
-                                child: Text(
-                                  "Dark Mode",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: changeThemData.getThem() ==
-                                              ThemeData.dark()
-                                          ? Colors.white
-                                          : Colors.black),
-                                ),
+                            ),
+                            FlatButton(
+                              onPressed: () {
+                                setState(() {
+                                  Get.changeTheme(ThemeData.dark());
+                                  SharedPrefrencesFunctions
+                                      .saveUserModeSharedPrefrences("DarkMode");
+                                  Navigator.pop(context);
+                                });
+                              },
+                              child: Text(
+                                "Dark Mode",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Get.isDarkMode
+                                        ? Colors.white
+                                        : Colors.black),
                               ),
-                            ],
-                          ),
-                        ],
-                      );
-                      return showDialog(
-                          context: context, builder: (context) => alert);
-                    },
-                    child: Icon(Icons.menu_sharp)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                    return showDialog(
+                        context: context, builder: (context) => alert);
+                  },
+                  child: Icon(Icons.menu_sharp),
+                ),
                 title: Text(
                   "Them",
                 ),
@@ -230,9 +229,9 @@ class _ChatRoomState extends State<ChatRoom> {
                     onTap: () async {
                       AuthMethods _auth = AuthMethods();
                       await _auth.signOut();
-                      Navigator.pushNamed(context, SignIn.id);
                       SharedPrefrencesFunctions
                           .saveUserLoggedInSharedPrefrences(false);
+                      Get.offAll(SignIn());
                     },
                     child: Icon(Icons.exit_to_app)),
                 title: Text("Log Out"),
@@ -310,21 +309,6 @@ class ChatRoomTile extends StatelessWidget {
                       color: kMainColor),
                 ),
               ),
-              // Container(
-              //   height: 50,
-              //   width: 50,
-              //   decoration: BoxDecoration(
-              //       color: Colors.white,
-              //       borderRadius: BorderRadius.circular(30)),
-              //   child: Center(
-              //     child: Text(userName.substring(0, 1).toUpperCase(),
-              //         textAlign: TextAlign.center,
-              //         style: TextStyle(
-              //             color: Colors.blueGrey,
-              //             fontSize: 16,
-              //             fontWeight: FontWeight.bold)),
-              //   ),
-              // ),
               SizedBox(
                 width: 12,
               ),

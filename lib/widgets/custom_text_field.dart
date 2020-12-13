@@ -4,9 +4,15 @@ import 'package:my_owen_chat_app/constans.dart';
 class CustomFormField extends StatelessWidget {
   final String hint;
   final IconData icon;
+  final IconButton icon2;
   final Function onClic;
+  final bool showPass;
   CustomFormField(
-      {@required this.onClic, @required this.icon, @required this.hint});
+      {@required this.onClic,
+      @required this.icon,
+      @required this.hint,
+      this.showPass,
+      this.icon2});
   String _messageError() {
     switch (hint) {
       case "Enter your full name ":
@@ -31,7 +37,8 @@ class CustomFormField extends StatelessWidget {
       child: TextFormField(
         style: TextStyle(color: Colors.black),
         onSaved: onClic,
-        obscureText: hint == "Enter Your Password" ? true : false,
+        obscureText:
+            (hint == "Enter Your Password" && showPass == false) ? true : false,
         validator: (value) {
           if (value.isEmpty) {
             return _messageError();
@@ -44,6 +51,11 @@ class CustomFormField extends StatelessWidget {
             icon,
             color: kMainColor,
           ),
+          // suffixIcon: Icon(
+          //   icon2,
+          //   color: kMainColor,
+          // ),
+          suffixIcon: icon2,
           hintText: hint,
           filled: true,
           fillColor: Colors.white70,

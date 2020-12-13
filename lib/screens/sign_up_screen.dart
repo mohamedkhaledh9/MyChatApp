@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_owen_chat_app/functions/shared_prefrences.dart';
 import 'package:my_owen_chat_app/screens/chat_rooms_screen.dart';
@@ -29,6 +30,8 @@ class _SignUpState extends State<SignUp> {
   File _imagePickerPath;
   final ImagePicker _picker = ImagePicker();
   bool isLoadin = false;
+  bool showPassword = false;
+
   void _pickImage(ImageSource src) async {
     final pickedImageFile =
         await _picker.getImage(source: src, maxWidth: 150, maxHeight: 150);
@@ -84,11 +87,28 @@ class _SignUpState extends State<SignUp> {
                   height: 10,
                 ),
                 CustomFormField(
-                    onClic: (value) {
-                      password = value;
+                  onClic: (value) {
+                    password = value;
+                  },
+                  icon: Icons.lock,
+                  hint: "Enter Your Password",
+                  showPass: showPassword,
+                  icon2: IconButton(
+                    icon: Icon(Icons.remove_red_eye),
+                    color: kMainColor,
+                    onPressed: () {
+                      if (showPassword == false) {
+                        setState(() {
+                          showPassword = true;
+                        });
+                      } else {
+                        setState(() {
+                          showPassword = false;
+                        });
+                      }
                     },
-                    icon: Icons.lock,
-                    hint: "Enter Your Password"),
+                  ),
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -134,7 +154,7 @@ class _SignUpState extends State<SignUp> {
                               setState(() {
                                 isLoadin = false;
                               });
-                              Navigator.pushNamed(context, ChatRoom.id);
+                              Get.offAll(ChatRoom());
                             } catch (e) {
                               setState(() {
                                 isLoadin = false;

@@ -11,18 +11,18 @@ class AppLogo extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Image(
-              image: AssetImage('images/logo.jpg'),
+              image: AssetImage('images/logo3.jpg'),
             ),
-            Positioned(
-              bottom: 0,
-              child: Text(
-                "MyChat",
-                style: TextStyle(
-                    fontFamily: 'myFont',
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
+            // Positioned(
+            //   bottom: 0,
+            //   child: Text(
+            //     "MyChat",
+            //     style: TextStyle(
+            //         fontSize: 25,
+            //         fontWeight: FontWeight.bold,
+            //         color: Colors.black),
+            //   ),
+            // ),
           ],
         ),
       ),
