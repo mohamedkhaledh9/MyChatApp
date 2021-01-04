@@ -13,7 +13,7 @@ class DataBaseMethods {
   getUsersimages(String userName) async {
     return await firestore
         .collection("users")
-        .where("name", isEqualTo: userName)
+        .where("name", isNotEqualTo: userName)
         .get();
   }
 
@@ -58,5 +58,21 @@ class DataBaseMethods {
         .collection("ChatRoom")
         .where('users', arrayContains: userName)
         .snapshots();
+  }
+
+  creatState(Map<String, dynamic> stateSenderInfo) async {
+    await firestore.collection("status").add(stateSenderInfo);
+  }
+
+  getStatus(String userName) async {
+    return await firestore
+        .collection("status")
+        .where("name", isNotEqualTo: userName).snapshots();
+  }
+
+  getMyStatus(String userName) async {
+    return await firestore
+        .collection("status")
+        .where("name", isEqualTo: userName).snapshots();
   }
 }

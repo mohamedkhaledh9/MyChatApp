@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:my_owen_chat_app/constans.dart';
 import 'package:my_owen_chat_app/constants/constants.dart';
 import 'package:my_owen_chat_app/functions/shared_prefrences.dart';
 import 'package:my_owen_chat_app/providers/change_them_data.dart';
 import 'package:my_owen_chat_app/screens/conversation_screen.dart';
 import 'package:my_owen_chat_app/screens/search_screen.dart';
-import 'package:my_owen_chat_app/screens/sign_in_screen.dart';
-import 'package:my_owen_chat_app/services/auth.dart';
 import 'package:my_owen_chat_app/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -26,11 +23,11 @@ class _ChatRoomState extends State<ChatRoom> {
   String userName;
   String email;
   String userImageUrl;
-  String initialDropDown = "Light Mode";
+
   final _auth = FirebaseAuth.instance;
-  QuerySnapshot userImage;
 
   getUserInfo() async {
+    await SharedPrefrencesFunctions.getUserEmailFromSharedPrefrences();
     userImageUrl =
         await SharedPrefrencesFunctions.getUserImageUrlFromSharedPrefrences();
     Constants.myName =
@@ -40,6 +37,13 @@ class _ChatRoomState extends State<ChatRoom> {
     setState(() {
       userStream = userData;
       userName = Constants.myName;
+    });
+  }
+
+  getCurrentUser() async {
+    String mail = await _auth.currentUser.email;
+    setState(() {
+      email = mail;
     });
   }
 
@@ -68,40 +72,33 @@ class _ChatRoomState extends State<ChatRoom> {
     );
   }
 
-  Widget profileImage() {
-    if (userImage != null) {
-      return ListView.builder(
-          itemCount: userImage.docs.length,
-          itemBuilder: (context, index) {
-            CircleAvatar(
-              radius: 40,
-              backgroundImage:
-                  NetworkImage(userImage.docs[index].data()['image_url']),
-            );
-          });
-    } else {
-      return CircleAvatar(
-        radius: 40,
-        backgroundColor: Colors.grey,
-      );
-    }
-  }
-
   Widget usersList() {
     return StreamBuilder(
         stream: userStream,
         builder: (context, snapShot) {
           if (snapShot.hasData) {
             return ListView.builder(
+                shrinkWrap: true,
                 itemCount: snapShot.data.docs.length,
                 itemBuilder: (context, index) {
-                  return ChatRoomTile(
-                    userName: snapShot.data.docs[index]['chatroom_id']
-                        .toString()
-                        .replaceAll("_", "")
-                        .replaceAll(Constants.myName, ""),
-                    chatRoomId: snapShot.data.docs[index]["chatroom_id"],
-                  );
+                  if (snapShot.data.docs.length != null) {
+                    return ChatRoomTile(
+                      userName: snapShot.data.docs[index]['chatroom_id']
+                          .toString()
+                          .replaceAll("_", "")
+                          .replaceAll(Constants.myName, ""),
+                      chatRoomId: snapShot.data.docs[index]["chatroom_id"],
+                      otherName: snapShot.data.docs[index]["otherUserName"],
+                      imageUrl: snapShot.data.docs[index]["otherUserName"] ==
+                              Constants.myName
+                          ? snapShot.data.docs[index]["myImageUrl"]
+                          : snapShot.data.docs[index]["otherUserImageUrl"],
+                    );
+                  } else {
+                    return Center(
+                      child: Text("Loading....."),
+                    );
+                  }
                 });
           } else {
             return Center(
@@ -117,141 +114,13 @@ class _ChatRoomState extends State<ChatRoom> {
   void initState() {
     getUserInfo();
     super.initState();
+    getCurrentUser();
   }
 
   @override
   Widget build(BuildContext context) {
     ChangeThemData changeThemData = Provider.of(context);
     return Scaffold(
-      drawer: Container(
-        child: Drawer(
-          child: ListView(
-            children: [
-              Container(
-                child: DrawerHeader(
-                  child: Column(
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          radius: 45,
-                          backgroundColor: Colors.grey,
-                          backgroundImage: userImageUrl != null
-                              ? NetworkImage(userImageUrl)
-                              : null,
-                        ),
-                        title: Text(
-                          Constants.myName != null
-                              ? Constants.myName.toUpperCase()
-                              : "",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(60, 0, 10, 0),
-                        child: Text(email == null ? "" : email),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text("Settings"),
-              ),
-              ListTile(
-                leading: GestureDetector(
-                  onTap: () {
-                    AlertDialog alert = AlertDialog(
-                      buttonPadding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 22),
-                      actionsPadding:
-                          EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-                      contentPadding: EdgeInsets.all(30),
-                      title: Text("Select Them"),
-                      actions: [
-                        Column(
-                          children: [
-                            FlatButton(
-                              onPressed: () {
-                                setState(() {
-                                  Get.changeTheme(ThemeData.light());
-                                  SharedPrefrencesFunctions
-                                      .saveUserModeSharedPrefrences(
-                                          "LightMode");
-                                  Navigator.pop(context);
-                                });
-                              },
-                              child: Text(
-                                "Light Mode",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Get.isDarkMode
-                                        ? Colors.white
-                                        : Colors.black),
-                              ),
-                            ),
-                            FlatButton(
-                              onPressed: () {
-                                setState(() {
-                                  Get.changeTheme(ThemeData.dark());
-                                  SharedPrefrencesFunctions
-                                      .saveUserModeSharedPrefrences("DarkMode");
-                                  Navigator.pop(context);
-                                });
-                              },
-                              child: Text(
-                                "Dark Mode",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Get.isDarkMode
-                                        ? Colors.white
-                                        : Colors.black),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                    return showDialog(
-                        context: context, builder: (context) => alert);
-                  },
-                  child: Icon(Icons.menu_sharp),
-                ),
-                title: Text(
-                  "Them",
-                ),
-              ),
-              ListTile(
-                leading: GestureDetector(
-                    onTap: () async {
-                      AuthMethods _auth = AuthMethods();
-                      await _auth.signOut();
-                      SharedPrefrencesFunctions
-                          .saveUserLoggedInSharedPrefrences(false);
-                      Get.offAll(SignIn());
-                    },
-                    child: Icon(Icons.exit_to_app)),
-                title: Text("Log Out"),
-              ),
-            ],
-          ),
-        ),
-      ),
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        backgroundColor: kMainColor,
-        title: Text(
-          "My Contacts",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        centerTitle: true,
-      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: kMainColor,
         child: IconButton(
@@ -268,55 +137,56 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 }
 
-class ChatRoomTile extends StatelessWidget {
+class ChatRoomTile extends StatefulWidget {
   final String userName;
   final String chatRoomId;
   final String imageUrl;
+  final String otherName;
 
-  ChatRoomTile({this.userName, this.chatRoomId, this.imageUrl});
+  ChatRoomTile({this.userName, this.chatRoomId, this.imageUrl, this.otherName});
 
+  @override
+  _ChatRoomTileState createState() => _ChatRoomTileState();
+}
+
+class _ChatRoomTileState extends State<ChatRoomTile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(5, 5, 5, 1),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ConversationScreen(chatRoomId),
+              builder: (context) => ConversationScreen(widget.chatRoomId),
             ),
           );
         },
         child: Container(
+          height: MediaQuery.of(context).size.height * .13,
           decoration: BoxDecoration(
             color: kMainColor,
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(10),
           ),
           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           child: Row(
             children: [
               CircleAvatar(
-                radius: 40,
+                radius: 45,
                 backgroundColor: Colors.grey,
-                // backgroundImage:
-                //     imageUrl != null ? NetworkImage(imageUrl) : null,
-                child: Text(
-                  userName.substring(0, 1).toUpperCase(),
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: kMainColor),
-                ),
+                backgroundImage: widget.imageUrl == null
+                    ? null
+                    : NetworkImage(widget.imageUrl),
               ),
               SizedBox(
                 width: 12,
               ),
-              Text(userName.toUpperCase(),
+              Text(widget.userName.toUpperCase(),
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold))
             ],
           ),

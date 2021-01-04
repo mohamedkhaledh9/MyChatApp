@@ -11,7 +11,7 @@ class AppLogo extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Image(
-              image: AssetImage('images/logo3.jpg'),
+              image: AssetImage('images/logo.jpg'),
             ),
             // Positioned(
             //   bottom: 0,

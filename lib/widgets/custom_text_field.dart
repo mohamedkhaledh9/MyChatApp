@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_owen_chat_app/constans.dart';
-
+import 'package:get/get.dart';
 class CustomFormField extends StatelessWidget {
   final String hint;
   final IconData icon;
@@ -16,17 +16,29 @@ class CustomFormField extends StatelessWidget {
   String _messageError() {
     switch (hint) {
       case "Enter your full name ":
-        return " Empty Name !!! ";
+        return " Empty Name !!! ".tr;
+        break;
+      case "ادخل اسم المستخدم":
+        return "ادخل اسم المستخدم !!";
+        break;
+      case "ادخل البريد الالكتروني":
+        return "تأكد من البريد الالكتروني";
+        break;
+      case "ادخل الرقم السري":
+        return " ادخل الرقم السري";
         break;
       case "Enter Your Email":
         return " Empty Email !! ";
         break;
       case "Enter Your Password":
         return " Empty Password !! ";
+        break;
       case "Enter User Name":
         return "Plz,Enter Your User Name";
+        break;
+
       case "Enter password":
-        return "Empty password !!";
+        return "Empty password !!".tr;
     }
   }
 
@@ -38,7 +50,7 @@ class CustomFormField extends StatelessWidget {
         style: TextStyle(color: Colors.black),
         onSaved: onClic,
         obscureText:
-            (hint == "Enter Your Password" && showPass == false) ? true : false,
+            ((hint == "Enter Your Password".tr) && showPass == false) ? true : false,
         validator: (value) {
           if (value.isEmpty) {
             return _messageError();
@@ -51,23 +63,19 @@ class CustomFormField extends StatelessWidget {
             icon,
             color: kMainColor,
           ),
-          // suffixIcon: Icon(
-          //   icon2,
-          //   color: kMainColor,
-          // ),
           suffixIcon: icon2,
           hintText: hint,
           filled: true,
-          fillColor: Colors.white70,
+          fillColor: Colors.white30,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-              20,
+              5,
             ),
             borderSide: BorderSide(color: Colors.white),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-              20,
+              5,
             ),
             borderSide: BorderSide(color: Colors.white),
           ),

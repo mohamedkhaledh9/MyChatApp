@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:my_owen_chat_app/constans.dart';
 import 'package:my_owen_chat_app/constants/constants.dart';
@@ -162,7 +162,7 @@ class _ConersationScreenState extends State<ConversationScreen> {
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide.none,
                               ),
-                              hintText: "Type a message",
+                              hintText: "Type a Message".tr,
                               hintStyle: TextStyle(color: Colors.grey),
                             ),
                             controller: messageController,

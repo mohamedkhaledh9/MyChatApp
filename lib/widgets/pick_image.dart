@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:get/get.dart';
 
 class PickImage extends StatefulWidget {
   final File _imagePickerPath;
   final Function(ImageSource src) _pickImage;
+
   PickImage(this._imagePickerPath, this._pickImage);
+
   @override
   _PickImageState createState() => _PickImageState();
 }
@@ -20,14 +23,17 @@ class _PickImageState extends State<PickImage> {
             backgroundImage: widget._imagePickerPath != null
                 ? FileImage(widget._imagePickerPath)
                 : null,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.white70,
             radius: 70,
           ),
           SizedBox(
             height: 5,
           ),
           Center(
-            child: Text("Select Your Profile image"),
+            child: Text(
+              "Select Your Profile image".tr,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -40,7 +46,10 @@ class _PickImageState extends State<PickImage> {
                   Icons.camera_alt,
                   size: 40,
                 ),
-                label: Text("Take Picture"),
+                label: Text(
+                  "Take Picture".tr,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
               ),
               SizedBox(
                 width: 30,
@@ -53,7 +62,10 @@ class _PickImageState extends State<PickImage> {
                   Icons.crop_original,
                   size: 40,
                 ),
-                label: Text("Select From Gallery"),
+                label: Text(
+                  "Select From Gallery".tr,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                ),
               ),
             ],
           ),

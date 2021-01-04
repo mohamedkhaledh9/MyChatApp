@@ -5,14 +5,13 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:my_owen_chat_app/constans.dart';
 import 'package:my_owen_chat_app/functions/shared_prefrences.dart';
 import 'package:my_owen_chat_app/providers/change_them_data.dart';
-import 'package:my_owen_chat_app/screens/chat_rooms_screen.dart';
+import 'package:my_owen_chat_app/screens/home_screen.dart';
 import 'package:my_owen_chat_app/screens/sign_up_screen.dart';
 import 'package:my_owen_chat_app/services/auth.dart';
 import 'package:my_owen_chat_app/services/database.dart';
 import 'package:my_owen_chat_app/widgets/custom_text_field.dart';
 import 'package:my_owen_chat_app/widgets/logo.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
   static String id = "SignIn";
@@ -62,7 +61,7 @@ class _SignInState extends State<SignIn> {
                     email = value;
                   },
                   icon: Icons.mail,
-                  hint: "Enter Your Email"),
+                  hint: "Enter Your Email".tr),
               SizedBox(
                 height: 20,
               ),
@@ -71,10 +70,12 @@ class _SignInState extends State<SignIn> {
                   password = value;
                 },
                 icon: Icons.lock,
-                hint: "Enter Your Password",
+                hint: "Enter Your Password".tr,
                 showPass: showPassword,
                 icon2: IconButton(
-                  icon: Icon(Icons.remove_red_eye),
+                  icon: Icon(showPassword == false
+                      ? Icons.visibility
+                      : Icons.visibility_off),
                   color: kMainColor,
                   onPressed: () {
                     if (showPassword == false) {
@@ -94,7 +95,7 @@ class _SignInState extends State<SignIn> {
               ),
               Builder(
                 builder: (context) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 80),
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
                   child: RaisedButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40),
@@ -126,7 +127,7 @@ class _SignInState extends State<SignIn> {
                                       .docs[0]
                                       .data()["image_url"]);
 
-                              Get.offAll(ChatRoom());
+                              Get.offAll(HomeScreen());
                             }
                           });
                         } catch (e) {
@@ -142,7 +143,7 @@ class _SignInState extends State<SignIn> {
                       }
                     },
                     child: Text(
-                      "Login",
+                      "Login".tr,
                       style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
@@ -155,15 +156,45 @@ class _SignInState extends State<SignIn> {
                 height: 15,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 80),
+                padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: RaisedButton(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   color: Colors.black,
-                  onPressed: () {},
+                  onPressed: () async {
+                    try {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      final user = await _authMethods.signInWithGoogle();
+                      snapshotUserInfo = await _dataBaseMethods
+                          .getUsersByUserEmail(user.user.email);
+                      SharedPrefrencesFunctions.saveUserEmailSharedPrefrences(
+                          snapshotUserInfo.docs[0].data()["email"]);
+                      SharedPrefrencesFunctions.saveUserNameSharedPrefrences(
+                          snapshotUserInfo.docs[0].data()["name"]);
+                      SharedPrefrencesFunctions
+                          .saveUserLoggedInSharedPrefrences(true);
+                      SharedPrefrencesFunctions.saveImageUrlSharedPrefrences(
+                          snapshotUserInfo.docs[0].data()["image_url"]);
+
+                      Get.offAll(HomeScreen());
+                      setState(() {
+                        isLoading = false;
+                      });
+                    } catch (e) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                      Get.snackbar("error !!!".tr,
+                          "Failed Login !!! Check your regesteration ...".tr,
+                          snackPosition: SnackPosition.BOTTOM,backgroundColor: Colors.red);
+
+                    }
+                  },
                   child: Text(
-                    "Sign With Google",
+                    "Sign With Google".tr,
                     style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -179,7 +210,7 @@ class _SignInState extends State<SignIn> {
                 child: Row(
                   children: [
                     Text(
-                      "Don't Have An Account ?   ",
+                      "Don't Have An Account ?".tr,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -190,7 +221,7 @@ class _SignInState extends State<SignIn> {
                         Navigator.pushNamed(context, SignUp.id);
                       },
                       child: Text(
-                        "Register Now",
+                        "Register Now".tr,
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
